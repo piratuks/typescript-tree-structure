@@ -11,9 +11,9 @@ Versatile and feature-rich TypeScript library with the capability to calculate x
 The library provides a class which will calculate the position of the object (x, y) with the following rules:
 
 1. Objects are calculated into groups (where separate groups do not have relationships with each other)
-2. Groups are places (horizontally position) or (vertically position) based on property
+2. Groups are placed (horizontally position) or (vertically position) based on property
 3. Each group are separated by space which is customized
-4. Groups are places from left-right where left is the biggest group (horizontal position) or top-bottom where the top is the biggest group (vertical position)
+4. Groups are placed from left-right where left is the biggest group (horizontal position) or top-bottom where the top is the biggest group (vertical position)
 5. Each group root object is the one with no parent
 6. Each object within the group is separated by space which is customized
 7. Each parent object is centred among its children
