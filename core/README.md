@@ -64,10 +64,10 @@ const { TreeStructure } = require('typescript-tree-structure');
 ## run example
 
 - To run example locally it is required to run `npm i` for both projects ([example](https://github.com/piratuks/typescript-tree-structure/tree/main/example) and [core](https://github.com/piratuks/typescript-tree-structure/tree/main/core))
-- After `npm i` need to run `npm run build` within [core](core)
-- Then need to run `npm link` within [core](core)
-- Then run `npm link typescript-tree-structure` within [example](example)
-- Everything is ready and you can perform `npm run start` within [example](example) which will auto generate index.html (open it via browser to see results) 
+- After `npm i` need to run `npm run build` within [core](https://github.com/piratuks/typescript-tree-structure/tree/main/core)
+- Then need to run `npm link` within [core](https://github.com/piratuks/typescript-tree-structure/tree/main/core)
+- Then run `npm link typescript-tree-structure` within [example](https://github.com/piratuks/typescript-tree-structure/tree/main/example)
+- Everything is ready and you can perform `npm run start` within [example](https://github.com/piratuks/typescript-tree-structure/tree/main/example) which will auto generate index.html (open it via browser to see results) 
 
 ## Tests
 
