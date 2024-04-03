@@ -24,14 +24,32 @@ jobs:
           npm install
         working-directory: ${{ github.workspace }}
         
-      - name: Run tests
+      - name: Run tests for core
         run: npm test
         working-directory: ${{ github.workspace }}/core
 
-      - name: Run ESLint
+      - name: Run ESLint for core
         run: npm run lint
         working-directory: ${{ github.workspace }}/core
 
-      - name: Run Prettier
+      - name: Run Prettier for core
         run: npm run format
         working-directory: ${{ github.workspace }}/core
+
+      - name: Move to example folder and install dependencies
+        run: |
+          cd example
+          npm install
+        working-directory: ${{ github.workspace }}
+        
+      - name: Run tests for example
+        run: npm test
+        working-directory: ${{ github.workspace }}/example
+
+      - name: Run ESLint for example
+        run: npm run lint
+        working-directory: ${{ github.workspace }}/example
+
+      - name: Run Prettier for example
+        run: npm run format
+        working-directory: ${{ github.workspace }}/example
