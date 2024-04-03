@@ -69,7 +69,7 @@ const { TreeStructure } = require('typescript-tree-structure');
 - Then run `npm link typescript-tree-structure` within [example](example)
 - Everything is ready and you can perform `npm run start` within [example](example) which will auto generate index.html (open it via browser to see results) 
 
-### Tests
+## Tests
 
 This module is well-tested. You can run:
 
