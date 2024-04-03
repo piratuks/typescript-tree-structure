@@ -63,7 +63,7 @@ const { TreeStructure } = require('typescript-tree-structure');
 
 ## run example
 
-- To run example locally it is required to run `npm i` for both projects ([example](example) and [core](core))
+- To run example locally it is required to run `npm i` for both projects ([example](./example) and [core](./core))
 - After `npm i` need to run `npm run build` within [core](core)
 - Then need to run `npm link` within [core](core)
 - Then run `npm link typescript-tree-structure` within [example](example)
