@@ -7,9 +7,9 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
-    "test": "mocha --config mocha.config.cjs",
-    "test:nyc": "nyc mocha --config mocha.config.cjs",
-    "test:watch": "mocha --config mocha.config.cjs --watch",
+    "test": "mocha --config mocha.config.json",
+    "test:nyc": "nyc mocha --config mocha.config.json",
+    "test:watch": "mocha --config mocha.config.json --watch",
     "start": "node --loader ts-node/esm --trace-warnings index.ts"
   },
   "keywords": [],
