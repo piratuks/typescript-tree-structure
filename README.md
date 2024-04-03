@@ -33,7 +33,7 @@ h -> has children: h1, h2 <br/>
 h1 -> has children: h2, h3 <br/>
 l -> has children: l1, l5 <br/>
 
-[Contribution Guidelines](object_example.png)
+![alt text](https://github.com/piratuks/tree-structure/blob/main/object_example.png?raw=true)
 
 ## installation
 
