@@ -1,6 +1,6 @@
-# Contributing to tree-structure
+# Contributing to typescript-tree-structure
 
-Thank you for considering contributing to tree-structure! We appreciate the time and effort you dedicate to helping this project grow.
+Thank you for considering contributing to typescript-tree-structure! We appreciate the time and effort you dedicate to helping this project grow.
 
 ## Code of Conduct
 
@@ -113,7 +113,7 @@ By contributing to this project, you agree that your contributions will be licen
 
 ## Conclusion
 
-Thank you for contributing to tree-structure! Your time and efforts are greatly appreciated.
+Thank you for contributing to typescript-tree-structure! Your time and efforts are greatly appreciated.
 
 ## Feedback
 

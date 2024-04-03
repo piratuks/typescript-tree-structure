@@ -1,5 +1,5 @@
 {
-  "name": "tree-structure",
+  "name": "typescript-tree-structure",
   "version": "1.0.1",
   "description": "Versatile and feature-rich TypeScript library with the capability to calculate x and y positions for objects represented in a tree structure while ensuring avoidance of relationship crossings",
   "author": "Evaldas Laureckas",
@@ -40,11 +40,11 @@
     "Visualization framework"
   ],
   "bugs": {
-    "url": "https://github.com/piratuks/tree-structure/issues"
+    "url": "https://github.com/piratuks/typescript-tree-structure/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/piratuks/tree-structure.git"
+    "url": "git://github.com/piratuks/typescript-tree-structure.git"
   },
   "license": "MIT",
   "dependencies": {
