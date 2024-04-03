@@ -1,4 +1,4 @@
-# tree-structure
+# typescript-tree-structure
 
 Versatile and feature-rich TypeScript library with the capability to calculate x and y positions for objects represented in a tree structure while ensuring avoidance of relationship crossings.
 
@@ -35,16 +35,16 @@ l -> has children: l1, l5 <br/>
 
 # horizontal example
 
-![alt text](https://github.com/piratuks/tree-structure/blob/main/object_example_horizontal.png?raw=true)
+![alt text](https://github.com/piratuks/typescript-tree-structure/blob/main/object_example_horizontal.png?raw=true)
 
 # vertical example
 
-![alt text](https://github.com/piratuks/tree-structure/blob/main/object_example_vertical.png?raw=true)
+![alt text](https://github.com/piratuks/typescript-tree-structure/blob/main/object_example_vertical.png?raw=true)
 
 ## installation
 
 ```bash
-$ npm install --save tree-structure
+$ npm install --save typescript-tree-structure
 ```
 
 ## usage
@@ -52,13 +52,13 @@ $ npm install --save tree-structure
 After installation, the only thing you need to do is require the module:
 
 ```bash
-import { TreeStructure } from 'tree-structure';
+import { TreeStructure } from 'typescript-tree-structure';
 ```
 
 or
 
 ```bash
-const { TreeStructure } = require('tree-structure');
+const { TreeStructure } = require('typescript-tree-structure');
 ```
 
 ## run example
@@ -66,7 +66,7 @@ const { TreeStructure } = require('tree-structure');
 - To run example locally it is required to run `npm i` for both projects ([example](example) and [core](core))
 - After `npm i` need to run `npm run build` within [core](core)
 - Then need to run `npm link` within [core](core)
-- Then run `npm link tree-structure` within [example](example)
+- Then run `npm link typescript-tree-structure` within [example](example)
 - Everything is ready and you can perform `npm run start` within [example](example) which will auto generate index.html (open it via browser to see results) 
 
 ### Tests

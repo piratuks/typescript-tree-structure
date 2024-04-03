@@ -1,7 +1,7 @@
 {
-  "name": "tree-structure-example",
+  "name": "typescript-tree-structure-example",
   "version": "1.0.1",
-  "description": "Usage example of tree-structure",
+  "description": "Usage example of typescript-tree-structure",
   "main": "index.js",
   "scripts": {
     "lint": "eslint .",

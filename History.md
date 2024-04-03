@@ -1,4 +1,4 @@
-# tree-structure
+# typescript-tree-structure
 
 ## 2024-04-03, version 1.0.1
 

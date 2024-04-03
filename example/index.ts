@@ -1,4 +1,4 @@
-import { CustomObject, Orientation, TreeStructure } from 'tree-structure';
+import { CustomObject, Orientation, TreeStructure } from 'typescript-tree-structure';
 
 const htmlString = (item: CustomObject): string => {
   const randomColor = () => {
