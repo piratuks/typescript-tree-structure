@@ -1,0 +1,7 @@
+.eslintrc.js
+dis/**
+node_modules/**
+dist
+node_modules
+mocha.config.js
+\*.md
