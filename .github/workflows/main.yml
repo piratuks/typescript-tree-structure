@@ -19,7 +19,7 @@ jobs:
           node-version: 16
 
       - name: Move in folder
-        run: cd ./core
+        run: cd core
         
       - name: Install dependencies
         run: npm install
