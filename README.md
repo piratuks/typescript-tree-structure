@@ -55,6 +55,14 @@ or
 const { TreeStructure } = require('tree-structure');
 ```
 
+## run example
+
+- To run example locally it is required to run `npm i` for both projects ([example](example) and [core](core))
+- After `npm i` need to run `npm run build` within [core](core)
+- Then need to run `npm link` within [core](core)
+- Then run `npm link tree-structure` within [example](example)
+- Everything is ready and you can perform `npm run start` within [example](example) which will auto generate index.html (open it via browser to see results) 
+
 ### Tests
 
 This module is well-tested. You can run:
