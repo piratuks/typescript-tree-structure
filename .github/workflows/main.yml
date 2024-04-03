@@ -18,17 +18,20 @@ jobs:
         with:
           node-version: 16
 
-      - name: Move in folder
-        run: cd core
+      - name: Move to core folder and install dependencies
+        run: |
+          cd core
+          npm install
+        working-directory: ${{ github.workspace }}
         
-      - name: Install dependencies
-        run: npm install
-
       - name: Run tests
         run: npm test
+        working-directory: ${{ github.workspace }}/core
 
       - name: Run ESLint
         run: npm run lint
+        working-directory: ${{ github.workspace }}/core
 
       - name: Run Prettier
         run: npm run format
+        working-directory: ${{ github.workspace }}/core
