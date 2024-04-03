@@ -8,17 +8,17 @@ Versatile and feature-rich TypeScript library with the capability to calculate x
 
 # main features
 
-Library provides class which will calculate position of object (x, y) with the following rules:
+The library provides a class which will calculate the position of the object (x, y) with the following rules:
 
-1. Objects are calculated into groups (where separate groups do not have relationships to each other)
+1. Objects are calculated into groups (where separate groups do not have relationships with each other)
 2. Groups are places (horizontally position) or (vertically position) based on property
-3. Each groups are separated by space which is customized
-4. Groups are places from left-right where left is the biggest group (horizontally position) or top-bottom where top is the biggest group (vertically position)
-5. Each groups root object is the one which with no parent
-6. Each object within group are separated by space which is customized
-7. Each parent object is centered among its children
-8. Height and width of each object can be different
-9. Each new row (horizontally position) will start where last row ended (after biggest child height) or each new column (vertical position) will start where last column ended (after biggest child width)
+3. Each group are separated by space which is customized
+4. Groups are places from left-right where left is the biggest group (horizontal position) or top-bottom where the top is the biggest group (vertical position)
+5. Each group root object is the one with no parent
+6. Each object within the group is separated by space which is customized
+7. Each parent object is centred among its children
+8. The height and width of each object can be different
+9. Each new row (horizontal position) will start where the last row ended (after the biggest child height) or each new column (vertical position) will start where the last column ended (after the biggest child width)
 
 So for example containing objects: a, b, c, d, e, i, i1, g, h, k, k1, k2, k3, k4, l, l1, l2, l3, l4, l5, h1, h2, h3
 
