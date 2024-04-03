@@ -1,6 +1,6 @@
 {
   "name": "typescript-tree-structure-example",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Usage example of typescript-tree-structure",
   "main": "index.js",
   "scripts": {
