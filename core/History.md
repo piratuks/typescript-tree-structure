@@ -1,5 +1,9 @@
 # typescript-tree-structure
 
+## 2025-06-25, version 1.0.3
+
+- fixes and optimization
+
 ## 2024-04-03, version 1.0.2
 
 Initial release with the following functionality
