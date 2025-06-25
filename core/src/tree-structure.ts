@@ -347,120 +347,61 @@ export class TreeStructure implements LayoutCoordinator {
   };
 
   /**
+   * Evenly distributes child groups along the specified axis by inserting equal
+   * spacing before, between, and after them so that they appear centered inside
+   * their parent container.
+   *
+   * @param axis - Axis along which to distribute the children: `'x'` (horizontal) or `'y'` (vertical).
+   * @param parentSize - Total size of the parent container on that axis (width for `'x'`, height for `'y'`).
+   * @param childrenTotalSize - Combined size of all child groups on that axis.
+   * @param children - Array of already-sorted child groups to be positioned.
+   *
+   * @remarks
+   * The method calculates the unoccupied space inside the parent by subtracting
+   * the children's combined size from the parent size. It divides that free
+   * space into *n + 1* equal gaps (where *n* is the number of children) and
+   * shifts every child by one gap, yielding a perfectly centered layout.
+   */
+  private centerChildren = (
+    axis: 'x' | 'y',
+    parentSize: number,
+    childrenTotalSize: number,
+    children: SortedGroups[]
+  ) => {
+    const remainingSpace = parentSize - childrenTotalSize;
+    const totalSpaces = children.length + 1;
+    const spaceBetween = remainingSpace / totalSpaces;
+    children.forEach(subChild => {
+      const pos = subChild.root.getPosition();
+      subChild.root.setPosition({ ...pos, [axis]: pos[axis] + spaceBetween });
+    });
+  };
+
+  /**
    * Calculates the distance between groups and rectangles, positioning them based on their relationships in a horizontal manner.
    *
    * @description This method organizes the groups and their children, calculating positions and distances
    * to create a visually balanced layout.
    */
   private distanceHorizontal = () => {
-    // This is the space between groups and rectangles
-    // create distance type
-    this.groups.forEach(() => {
-      this.coordinates.push({ x: 0, y: this.customObjectSpace });
-      this.distances.push(0);
-    });
-    // used for spaces between individual groups
-    // iterate through the groups
-    this.sortedGroups.forEach((object, index) => {
-      // necessary for group members
-      let horizontalLength = 0; //space
-      let verticalLength = 0;
-
-      if (index > 0) {
-        this.coordinates[index] = {
-          y: this.customObjectSpace,
-          x: this.distances[index - 1] + this.coordinates[index - 1].x
-        };
-      }
-      if (object.children.length > 0) {
-        // This is the bottom y coordinates of the root element
-        verticalLength = object.root.getHeight() + this.customObjectSpace * 2;
-        // This is the top y coordinates of the children to the root
-        const ch = object.children;
-        ch.forEach((child, subIndex) => {
-          // check if child has children
-          if (child.children.length > 0) {
-            // top left y coordinate for children's children
-            const y = verticalLength + Math.max(...ch.map(a => a.root.getHeight())) + this.customObjectSpace;
-            const { x } = this.childDistances(
-              child.children,
-              y,
-              horizontalLength + this.coordinates[index].x,
-              this.orientation
-            );
-            //if chilren's combined length is greater than parent's
-            if (x > child.root.getWidth()) {
-              child.root.setPosition({
-                x:
-                  this.calculateStartingPointOfSmallerLine(x, child.root.getWidth()) +
-                  horizontalLength +
-                  this.coordinates[index].x,
-                y: verticalLength
-              });
-              horizontalLength += x - this.customObjectSpace;
-            } else {
-              child.root.setPosition({ x: horizontalLength + this.coordinates[index].x, y: verticalLength });
-              horizontalLength += child.root.getWidth();
-              //reset children coordinates to be centrally positioned relative to the parent
-              const remainingSpace = child.root.getWidth() - x;
-              const totalSpaces = child.children.length + 1;
-              const spaceBetweenLines = remainingSpace / totalSpaces;
-              child.children.forEach(subChild => {
-                const pos = subChild.root.getPosition();
-                subChild.root.setPosition({ ...pos, x: pos.x + spaceBetweenLines });
-              });
-            }
-          } else {
-            // when the child has no children
-            // update self coordinates
-            if (subIndex === 0) {
-              child.root.setPosition({
-                x: horizontalLength + this.coordinates[index].x + this.customObjectSpace,
-                y: verticalLength
-              });
-              // update horizontal position
-              horizontalLength = horizontalLength + child.root.getWidth() + this.customObjectSpace;
-            } else {
-              child.root.setPosition({
-                x: horizontalLength + this.coordinates[index].x + this.customObjectSpace,
-                y: verticalLength
-              });
-              // update horizontal position
-              horizontalLength = horizontalLength + child.root.getWidth() + this.customObjectSpace;
-            }
-          }
-        });
-        // the combined length of children is greater than parent length
-        if (horizontalLength > object.root.getWidth()) {
-          object.root.setPosition({
-            x:
-              this.calculateStartingPointOfSmallerLine(
-                horizontalLength + this.customObjectSpace,
-                object.root.getWidth()
-              ) + this.coordinates[index].x,
-            y: this.coordinates[index].y
-          });
-          this.distances[index] = horizontalLength;
-        } else {
-          object.root.setPosition({ x: this.coordinates[index].x, y: this.coordinates[index].y });
-          this.distances[index] = object.root.getWidth();
-          //reset children coordinates to be centrally positioned relative to the parent
-          const remainingSpace = object.root.getWidth() - horizontalLength;
-          const totalSpaces = object.children.length + 1;
-          const spaceBetweenLines = remainingSpace / totalSpaces;
-          ch.forEach(subChild => {
-            const pos = subChild.root.getPosition();
-            subChild.root.setPosition({ ...pos, x: pos.x + spaceBetweenLines });
-          });
-        }
-      } else {
-        object.root?.setPosition({
-          x: this.coordinates[index].x + this.customObjectSpace,
-          y: this.coordinates[index].y
-        });
-        this.distances[index] = object.root.getWidth() + this.customObjectSpace;
-      }
-    });
+    this.distanceByOrientation(
+      'x',
+      () => ({ x: 0, y: this.customObjectSpace }),
+      (children, mainLength) =>
+        mainLength + Math.max(...children.map(a => a.root.getHeight())) + this.customObjectSpace,
+      ({ crossLength, coordinates, childSize, childCombined, mainLength }) => ({
+        x: this.calculateStartingPointOfSmallerLine(childCombined, childSize) + crossLength + coordinates.x,
+        y: mainLength
+      }),
+      ({ crossLength, coordinates, mainLength }) => ({
+        x: crossLength + coordinates.x,
+        y: mainLength
+      }),
+      ({ crossLength, coordinates, rootSize }) => ({
+        x: this.calculateStartingPointOfSmallerLine(crossLength + this.customObjectSpace, rootSize) + coordinates.x,
+        y: coordinates.y
+      })
+    );
   };
 
   /**
@@ -470,111 +411,131 @@ export class TreeStructure implements LayoutCoordinator {
    * to create a visually balanced layout.
    */
   private distanceVertical = () => {
-    // This is the space between groups and rectangles
-    // create distance type
+    this.distanceByOrientation(
+      'y',
+      () => ({ x: this.customObjectSpace, y: 0 }),
+      (children, mainLength) => mainLength + Math.max(...children.map(a => a.root.getWidth())) + this.customObjectSpace,
+      ({ crossLength, coordinates, childSize, childCombined, mainLength }) => ({
+        x: mainLength,
+        y: this.calculateStartingPointOfSmallerLine(childCombined, childSize) + crossLength + coordinates.y
+      }),
+      ({ crossLength, coordinates, mainLength }) => ({
+        x: mainLength,
+        y: crossLength + coordinates.y
+      }),
+      ({ crossLength, coordinates, rootSize }) => ({
+        x: coordinates.x,
+        y: this.calculateStartingPointOfSmallerLine(crossLength + this.customObjectSpace, rootSize) + coordinates.y
+      })
+    );
+  };
+
+  private distanceByOrientation = (
+    axis: 'x' | 'y',
+    coordInit: () => Position,
+    getChildOffset: (children: SortedGroups[], mainLength: number) => number,
+    setChildPositionCentered: (params: {
+      crossLength: number;
+      coordinates: Position;
+      childSize: number;
+      childCombined: number;
+      mainLength: number;
+    }) => Position,
+    setChildPositionDefault: (params: { crossLength: number; coordinates: Position; mainLength: number }) => Position,
+    setRootPosition: (params: {
+      crossLength: number;
+      coordinates: Position;
+      rootSize: number;
+      mainLength: number;
+    }) => Position
+  ) => {
     this.groups.forEach(() => {
-      this.coordinates.push({ x: this.customObjectSpace, y: 0 });
+      this.coordinates.push(coordInit());
       this.distances.push(0);
     });
 
-    // iterate through groups
     this.sortedGroups.forEach((object, index) => {
-      let horizontalLength = 0;
-      let verticalLength = 0;
+      let mainLength = 0;
+      let crossLength = 0;
       if (index > 0) {
-        this.coordinates[index] = {
-          x: this.customObjectSpace,
-          y: this.distances[index - 1] + this.coordinates[index - 1].y
-        };
+        this.coordinates[index] = coordInit();
+        this.coordinates[index][axis] = this.distances[index - 1] + this.coordinates[index - 1][axis];
       }
-      if (object.children.length > 0) {
-        // This is the bottom y coordinates of the root element
-        horizontalLength = object.root.getWidth() + this.customObjectSpace * 2;
-        // This is the top y coordinates of the children to the root
-        //verticalLength = + space
-        const ch = object.children;
-        ch.forEach((child, subIndex) => {
-          // check if child has children
-          if (child.children.length > 0) {
-            // top left y coordinate for children's children
-            const x = horizontalLength + Math.max(...ch.map(a => a.root.getWidth())) + this.customObjectSpace;
-            const { y } = this.childDistances(
-              child.children,
-              verticalLength + this.coordinates[index].y,
-              x,
-              this.orientation
+
+      if (!object.children.length) {
+        const pos = { ...this.coordinates[index] };
+        pos[axis] += this.customObjectSpace;
+        object.root?.setPosition(pos);
+        this.distances[index] = object.root[axis === 'x' ? 'getWidth' : 'getHeight']() + this.customObjectSpace;
+        return;
+      }
+
+      mainLength = object.root[axis === 'x' ? 'getHeight' : 'getWidth']() + this.customObjectSpace * 2;
+
+      const children = object.children;
+
+      children.forEach(child => {
+        if (child.children.length) {
+          const childOffset = getChildOffset(children, mainLength);
+          const childPos = this.childDistances(
+            child.children,
+            axis === 'y' ? crossLength + this.coordinates[index].y : childOffset,
+            axis === 'x' ? crossLength + this.coordinates[index].x : childOffset,
+            this.orientation
+          );
+          const childSize = child.root[axis === 'x' ? 'getWidth' : 'getHeight']();
+          const childCombined = childPos[axis];
+          if (childCombined > childSize) {
+            child.root.setPosition(
+              setChildPositionCentered({
+                crossLength,
+                coordinates: this.coordinates[index],
+                childSize,
+                childCombined,
+                mainLength
+              })
             );
-            //if chilren's combined length is greater than parent's
-            if (y > child.root.getHeight()) {
-              child.root.setPosition({
-                x: horizontalLength,
-                y:
-                  this.calculateStartingPointOfSmallerLine(y, child.root.getHeight()) +
-                  verticalLength +
-                  this.coordinates[index].y
-              });
-              verticalLength += y - this.customObjectSpace;
-            } else {
-              child.root.setPosition({ x: horizontalLength, y: this.coordinates[index].y + verticalLength });
-              verticalLength += child.root.getHeight();
-              //reset children coordinates to be centrally positioned relative to the parent
-              const remainingSpace = child.root.getHeight() - y;
-              const totalSpaces = child.children.length + 1;
-              const spaceBetweenLines = remainingSpace / totalSpaces;
-              child.children.forEach(subChild => {
-                const pos = subChild.root.getPosition();
-                subChild.root.setPosition({ ...pos, y: pos.y + spaceBetweenLines });
-              });
-            }
+            crossLength += childCombined - this.customObjectSpace;
           } else {
-            // when the child has no children
-            // update self coordinates
-            if (subIndex === 0) {
-              child.root.setPosition({
-                x: horizontalLength,
-                y: this.coordinates[index].y + this.customObjectSpace + verticalLength
-              });
-              // update horizontal position
-              verticalLength = verticalLength + child.root.getHeight() + this.customObjectSpace;
-            } else {
-              child.root.setPosition({
-                x: horizontalLength,
-                y: this.coordinates[index].y + this.customObjectSpace + verticalLength
-              });
-              // update horizontal position
-              verticalLength = verticalLength + child.root.getHeight() + this.customObjectSpace;
-            }
+            child.root.setPosition(
+              setChildPositionDefault({
+                crossLength,
+                coordinates: this.coordinates[index],
+                mainLength
+              })
+            );
+            crossLength += childSize;
+            this.centerChildren(axis, childSize, childCombined, child.children);
           }
-        });
-        // the combined length of children is greater than parent length
-        if (verticalLength > object.root.getHeight()) {
-          object.root.setPosition({
-            x: this.coordinates[index].x,
-            y:
-              this.calculateStartingPointOfSmallerLine(
-                verticalLength + this.customObjectSpace,
-                object.root.getHeight()
-              ) + this.coordinates[index].y
-          });
-          this.distances[index] = verticalLength;
         } else {
-          object.root.setPosition({ x: this.coordinates[index].x, y: this.coordinates[index].y });
-          this.distances[index] = object.root.getHeight();
-          //reset children coordinates to be centrally positioned relative to the parent
-          const remainingSpace = object.root?.getHeight() - verticalLength;
-          const totalSpaces = object.children.length + 1;
-          const spaceBetweenLines = remainingSpace / totalSpaces;
-          ch.forEach(subChild => {
-            const pos = subChild.root.getPosition();
-            subChild.root.setPosition({ ...pos, y: pos.y + spaceBetweenLines });
-          });
+          // No children
+          const pos = { ...this.coordinates[index] };
+          if (axis === 'x') {
+            pos.x += crossLength + this.customObjectSpace;
+            pos.y = mainLength;
+          } else {
+            pos.x = mainLength;
+            pos.y += crossLength + this.customObjectSpace;
+          }
+          child.root.setPosition(pos);
+          crossLength += child.root[axis === 'x' ? 'getWidth' : 'getHeight']() + this.customObjectSpace;
         }
+      });
+
+      if (crossLength > object.root[axis === 'x' ? 'getWidth' : 'getHeight']()) {
+        object.root.setPosition(
+          setRootPosition({
+            crossLength,
+            coordinates: this.coordinates[index],
+            rootSize: object.root[axis === 'x' ? 'getWidth' : 'getHeight'](),
+            mainLength
+          })
+        );
+        this.distances[index] = crossLength;
       } else {
-        object.root?.setPosition({
-          x: this.coordinates[index].x,
-          y: this.coordinates[index].y + this.customObjectSpace
-        });
-        this.distances[index] = object.root?.getHeight() + this.customObjectSpace;
+        object.root.setPosition(this.coordinates[index]);
+        this.distances[index] = object.root[axis === 'x' ? 'getWidth' : 'getHeight']();
+        this.centerChildren(axis, object.root[axis === 'x' ? 'getWidth' : 'getHeight'](), crossLength, children);
       }
     });
   };
